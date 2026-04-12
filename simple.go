@@ -1,5 +1,5 @@
 package tb_api
 
-func simpleFunction() string {
+func SimpleFunction() string {
 	return "Hello from tb-api!"
 }
