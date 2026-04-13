@@ -1,9 +1,11 @@
 package tb_api
 
-import "errors"
+import (
+	"errors"
+)
 
 type Builder struct {
-	ApiUrl   string
+	Hostname string
 	Username string
 	Password string
 }
@@ -12,8 +14,8 @@ func NewBuilder() *Builder {
 	return &Builder{}
 }
 
-func (b *Builder) WithApiUrl(apiUrl string) *Builder {
-	b.ApiUrl = apiUrl
+func (b *Builder) WithHostname(hostname string) *Builder {
+	b.Hostname = hostname
 	return b
 }
 
@@ -36,7 +38,7 @@ func (b *Builder) Build() (error, *TabroomApi) {
 }
 
 func (b *Builder) validate() error {
-	if b.ApiUrl == "" {
+	if b.Hostname == "" {
 		return errors.New("missing API URL in builder")
 	}
 	if b.Username == "" {

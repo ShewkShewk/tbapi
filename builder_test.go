@@ -12,7 +12,7 @@ func Test_newBuilder(t *testing.T) {
 		want Builder
 	}{
 		{"NewBuilder returns an empty builder", Builder{
-			ApiUrl:   "",
+			Hostname: "",
 			Username: "",
 			Password: "",
 		}},
@@ -28,7 +28,7 @@ func Test_newBuilder(t *testing.T) {
 
 func TestBuilder_withApiUrl(t *testing.T) {
 	type fields struct {
-		ApiUrl   string
+		Hostname string
 		Username string
 		Password string
 	}
@@ -42,9 +42,9 @@ func TestBuilder_withApiUrl(t *testing.T) {
 		want   *Builder
 	}{
 		{
-			name: "WithApiUrl returns a builder with the URL set",
+			name: "WithHostname returns a builder with the URL set",
 			fields: fields{
-				ApiUrl:   "",
+				Hostname: "",
 				Username: "",
 				Password: "",
 			},
@@ -52,15 +52,15 @@ func TestBuilder_withApiUrl(t *testing.T) {
 				apiUrl: "https://www.tabroom.com",
 			},
 			want: &Builder{
-				ApiUrl:   "https://www.tabroom.com",
+				Hostname: "https://www.tabroom.com",
 				Username: "",
 				Password: "",
 			},
 		},
 		{
-			name: "WithApiUrl will overwrite existing URL",
+			name: "WithHostname will overwrite existing URL",
 			fields: fields{
-				ApiUrl:   "https://www.tabroom.com",
+				Hostname: "https://www.tabroom.com",
 				Username: "",
 				Password: "",
 			},
@@ -68,15 +68,15 @@ func TestBuilder_withApiUrl(t *testing.T) {
 				apiUrl: "https://www.other.tabroom.com",
 			},
 			want: &Builder{
-				ApiUrl:   "https://www.other.tabroom.com",
+				Hostname: "https://www.other.tabroom.com",
 				Username: "",
 				Password: "",
 			},
 		},
 		{
-			name: "WithApiUrl will not effect other fields",
+			name: "WithHostname will not effect other fields",
 			fields: fields{
-				ApiUrl:   "",
+				Hostname: "",
 				Username: "a_username_value",
 				Password: "a_password_value",
 			},
@@ -84,7 +84,7 @@ func TestBuilder_withApiUrl(t *testing.T) {
 				apiUrl: "https://www.tabroom.com",
 			},
 			want: &Builder{
-				ApiUrl:   "https://www.tabroom.com",
+				Hostname: "https://www.tabroom.com",
 				Username: "a_username_value",
 				Password: "a_password_value",
 			},
@@ -93,12 +93,12 @@ func TestBuilder_withApiUrl(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			b := &Builder{
-				ApiUrl:   tt.fields.ApiUrl,
+				Hostname: tt.fields.Hostname,
 				Username: tt.fields.Username,
 				Password: tt.fields.Password,
 			}
-			if got := b.WithApiUrl(tt.args.apiUrl); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("WithApiUrl() = %v, want %v", got, tt.want)
+			if got := b.WithHostname(tt.args.apiUrl); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("WithHostname() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -106,7 +106,7 @@ func TestBuilder_withApiUrl(t *testing.T) {
 
 func TestBuilder_withUsername(t *testing.T) {
 	type fields struct {
-		ApiUrl   string
+		Hostname string
 		Username string
 		Password string
 	}
@@ -122,7 +122,7 @@ func TestBuilder_withUsername(t *testing.T) {
 		{
 			name: "WithUsername will populate the username field",
 			fields: fields{
-				ApiUrl:   "",
+				Hostname: "",
 				Username: "",
 				Password: "",
 			},
@@ -130,7 +130,7 @@ func TestBuilder_withUsername(t *testing.T) {
 				username: "example_username",
 			},
 			want: &Builder{
-				ApiUrl:   "",
+				Hostname: "",
 				Username: "example_username",
 				Password: "",
 			},
@@ -138,7 +138,7 @@ func TestBuilder_withUsername(t *testing.T) {
 		{
 			name: "WithUsername will overwrite existing username",
 			fields: fields{
-				ApiUrl:   "",
+				Hostname: "",
 				Username: "example_username",
 				Password: "",
 			},
@@ -146,7 +146,7 @@ func TestBuilder_withUsername(t *testing.T) {
 				username: "new_username",
 			},
 			want: &Builder{
-				ApiUrl:   "",
+				Hostname: "",
 				Username: "new_username",
 				Password: "",
 			},
@@ -154,7 +154,7 @@ func TestBuilder_withUsername(t *testing.T) {
 		{
 			name: "WithUsername will not modify other fields",
 			fields: fields{
-				ApiUrl:   "https://tabroom.com",
+				Hostname: "https://tabroom.com",
 				Username: "",
 				Password: "example_password",
 			},
@@ -162,7 +162,7 @@ func TestBuilder_withUsername(t *testing.T) {
 				username: "example_username",
 			},
 			want: &Builder{
-				ApiUrl:   "https://tabroom.com",
+				Hostname: "https://tabroom.com",
 				Username: "example_username",
 				Password: "example_password",
 			},
@@ -171,7 +171,7 @@ func TestBuilder_withUsername(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			b := &Builder{
-				ApiUrl:   tt.fields.ApiUrl,
+				Hostname: tt.fields.Hostname,
 				Username: tt.fields.Username,
 				Password: tt.fields.Password,
 			}
@@ -184,7 +184,7 @@ func TestBuilder_withUsername(t *testing.T) {
 
 func TestBuilder_WithPassword(t *testing.T) {
 	type fields struct {
-		ApiUrl   string
+		Hostname string
 		Username string
 		Password string
 	}
@@ -200,7 +200,7 @@ func TestBuilder_WithPassword(t *testing.T) {
 		{
 			name: "withPassword will populate the password field",
 			fields: fields{
-				ApiUrl:   "",
+				Hostname: "",
 				Username: "",
 				Password: "",
 			},
@@ -208,7 +208,7 @@ func TestBuilder_WithPassword(t *testing.T) {
 				password: "example_password",
 			},
 			want: &Builder{
-				ApiUrl:   "",
+				Hostname: "",
 				Username: "",
 				Password: "example_password",
 			},
@@ -216,7 +216,7 @@ func TestBuilder_WithPassword(t *testing.T) {
 		{
 			name: "withPassword will overwrite the password field",
 			fields: fields{
-				ApiUrl:   "",
+				Hostname: "",
 				Username: "",
 				Password: "example_password",
 			},
@@ -224,7 +224,7 @@ func TestBuilder_WithPassword(t *testing.T) {
 				password: "other_password",
 			},
 			want: &Builder{
-				ApiUrl:   "",
+				Hostname: "",
 				Username: "",
 				Password: "other_password",
 			},
@@ -232,7 +232,7 @@ func TestBuilder_WithPassword(t *testing.T) {
 		{
 			name: "withPassword will not modify other fields",
 			fields: fields{
-				ApiUrl:   "https://tabroom.com",
+				Hostname: "https://tabroom.com",
 				Username: "example_username",
 				Password: "",
 			},
@@ -240,7 +240,7 @@ func TestBuilder_WithPassword(t *testing.T) {
 				password: "example_password",
 			},
 			want: &Builder{
-				ApiUrl:   "https://tabroom.com",
+				Hostname: "https://tabroom.com",
 				Username: "example_username",
 				Password: "example_password",
 			},
@@ -249,7 +249,7 @@ func TestBuilder_WithPassword(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			b := &Builder{
-				ApiUrl:   tt.fields.ApiUrl,
+				Hostname: tt.fields.Hostname,
 				Username: tt.fields.Username,
 				Password: tt.fields.Password,
 			}
@@ -262,7 +262,7 @@ func TestBuilder_WithPassword(t *testing.T) {
 
 func TestBuilder_Build(t *testing.T) {
 	type fields struct {
-		ApiUrl   string
+		Hostname string
 		Username string
 		Password string
 	}
@@ -275,7 +275,7 @@ func TestBuilder_Build(t *testing.T) {
 		{
 			name: "Builder with all fields populated will return a TabroomApi",
 			fields: fields{
-				ApiUrl:   "https://tabroom.com",
+				Hostname: "https://tabroom.com",
 				Username: "example_username",
 				Password: "example_password",
 			},
@@ -285,7 +285,7 @@ func TestBuilder_Build(t *testing.T) {
 		{
 			name: "Builder with url missing will return an error",
 			fields: fields{
-				ApiUrl:   "",
+				Hostname: "",
 				Username: "example_username",
 				Password: "example_password",
 			},
@@ -295,7 +295,7 @@ func TestBuilder_Build(t *testing.T) {
 		{
 			name: "Builder with username missing will return an error",
 			fields: fields{
-				ApiUrl:   "https://tabroom.com",
+				Hostname: "https://tabroom.com",
 				Username: "",
 				Password: "example_password",
 			},
@@ -305,7 +305,7 @@ func TestBuilder_Build(t *testing.T) {
 		{
 			name: "Builder with username missing will return an error",
 			fields: fields{
-				ApiUrl:   "https://tabroom.com",
+				Hostname: "https://tabroom.com",
 				Username: "example_username",
 				Password: "",
 			},
@@ -316,7 +316,7 @@ func TestBuilder_Build(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			b := &Builder{
-				ApiUrl:   tt.fields.ApiUrl,
+				Hostname: tt.fields.Hostname,
 				Username: tt.fields.Username,
 				Password: tt.fields.Password,
 			}
