@@ -8,20 +8,20 @@ import (
 	"time"
 )
 
-type httpRequester interface {
+type httpClient interface {
 	get(path string) (*http.Response, error)
 	postForm(path string, values url.Values) (*http.Response, error)
 	cookies() map[string]string
 }
 
-type defaultHttpRequester struct {
+type defaultHttpClient struct {
 	url    url.URL
 	client http.Client
 }
 
-func newDefaultHttpRequester(url url.URL) httpRequester {
+func newDefaultHttpRequester(url url.URL) httpClient {
 	jar, _ := cookiejar.New(nil)
-	return &defaultHttpRequester{
+	return &defaultHttpClient{
 		url: url,
 		client: http.Client{
 			Timeout: 15 * time.Second,
@@ -30,15 +30,15 @@ func newDefaultHttpRequester(url url.URL) httpRequester {
 	}
 }
 
-func (h *defaultHttpRequester) get(path string) (*http.Response, error) {
+func (h *defaultHttpClient) get(path string) (*http.Response, error) {
 	return h.client.Get(h.url.JoinPath(path).String())
 }
 
-func (h *defaultHttpRequester) postForm(path string, values url.Values) (*http.Response, error) {
+func (h *defaultHttpClient) postForm(path string, values url.Values) (*http.Response, error) {
 	return h.client.PostForm(h.url.JoinPath(path).String(), values)
 }
 
-func (h *defaultHttpRequester) cookies() map[string]string {
+func (h *defaultHttpClient) cookies() map[string]string {
 	toReturn := make(map[string]string)
 	parsed, _ := url.Parse(fmt.Sprintf("%s://%s", h.url.Scheme, h.url.Hostname()))
 	for _, cookie := range h.client.Jar.Cookies(parsed) {
