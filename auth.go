@@ -16,31 +16,7 @@ const (
 	SHA  = "sha"
 )
 
-type TabroomCredentialsRetriever struct {
-	url       url.URL
-	username  string
-	password  string
-	requester httpRequester
-}
-
-func newTabroomCredentialsRetriever(
-	url url.URL,
-	username string,
-	password string,
-	requester httpRequester,
-) *TabroomCredentialsRetriever {
-	if requester == nil {
-		requester = newDefaultHttpRequester(url)
-	}
-	return &TabroomCredentialsRetriever{
-		url:       url,
-		username:  username,
-		password:  password,
-		requester: requester,
-	}
-}
-
-func (t *TabroomCredentialsRetriever) retrieveCredentials() (string, error) {
+func (t *TabroomApi) retrieveCredentials() (string, error) {
 	loginParameters, err := t.getLoginParameters()
 	if err != nil {
 		return "", err
@@ -62,8 +38,8 @@ func (t *TabroomCredentialsRetriever) retrieveCredentials() (string, error) {
 	return tabroomToken, nil
 }
 
-func (t *TabroomCredentialsRetriever) getLoginParameters() (map[string]string, error) {
-	result, err := t.requester.get("/index/index.mhtml")
+func (t *TabroomApi) getLoginParameters() (map[string]string, error) {
+	result, err := t.client.get("/index/index.mhtml")
 	if err != nil {
 		return nil, err
 	}
@@ -77,7 +53,7 @@ func (t *TabroomCredentialsRetriever) getLoginParameters() (map[string]string, e
 	return toReturn, nil
 }
 
-func (t *TabroomCredentialsRetriever) getLoginForm(salt string, sha string) (url.Values, error) {
+func (t *TabroomApi) getLoginForm(salt string, sha string) (url.Values, error) {
 	loginForm := url.Values{}
 	loginForm.Add("salt", salt)
 	loginForm.Add("sha", sha)
@@ -86,8 +62,8 @@ func (t *TabroomCredentialsRetriever) getLoginForm(salt string, sha string) (url
 	return loginForm, nil
 }
 
-func (t *TabroomCredentialsRetriever) getTabroomToken(loginForm url.Values) (string, error) {
-	client := t.requester
+func (t *TabroomApi) getTabroomToken(loginForm url.Values) (string, error) {
+	client := t.client
 	_, err := client.postForm("/user/login/login_save.mhtml", loginForm)
 	if err != nil {
 		return "", err

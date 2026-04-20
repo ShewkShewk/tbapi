@@ -282,7 +282,9 @@ func TestBuilder_Build(t *testing.T) {
 			},
 			wantErr: nil,
 			wantApi: &TabroomApi{
-				url.URL{Scheme: "https", Host: "tabroom.com"},
+				username: "example_username",
+				password: "example_password",
+				client:   newDefaultHttpRequester(url.URL{Scheme: "https", Host: "tabroom.com"}),
 			},
 		},
 		{

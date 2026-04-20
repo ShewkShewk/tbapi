@@ -40,7 +40,9 @@ func (b *Builder) Build() (error, *TabroomApi) {
 		return err, nil
 	}
 	return nil, &TabroomApi{
-		url: *parsed,
+		username: b.Username,
+		password: b.Password,
+		client:   newDefaultHttpRequester(*parsed),
 	}
 }
 

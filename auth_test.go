@@ -48,12 +48,11 @@ func Test(t *testing.T) {
 			}
 			defer testServer.Close()
 			url, _ := url2.Parse(testServer.URL)
-			api := newTabroomCredentialsRetriever(
-				*url,
-				"test_username",
-				"test_password",
-				nil,
-			)
+			api := TabroomApi{
+				username: "",
+				password: "",
+				client:   newDefaultHttpRequester(*url),
+			}
 			token, err := api.retrieveCredentials()
 			if !reflect.DeepEqual(token, test.expectedToken) {
 				t.Errorf("retrieveCredentials token got = %v, want %v", token, test.expectedToken)
