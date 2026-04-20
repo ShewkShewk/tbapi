@@ -20,6 +20,12 @@
           "code": 400,
           "body": "",
           "headers": {},
+          "form": {
+            "salt": "salt_value_here",
+            "sha": "sha_value_here",
+            "username": "wrong_username",
+            "password": "wrong_password"
+          },
           "cookies": []
         }
       ]

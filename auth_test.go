@@ -11,30 +11,40 @@ func Test(t *testing.T) {
 	tests := []struct {
 		name          string
 		scenario      string
+		username      string
+		password      string
 		expectedToken string
 		expectedErr   error
 	}{
 		{
 			name:          "Token successfully retrieved",
 			scenario:      "test_scenarios/complete.json",
+			username:      "right_username",
+			password:      "right_password",
 			expectedToken: "tabroom_token_value",
 			expectedErr:   nil,
 		},
 		{
 			name:          "Missing salt",
 			scenario:      "test_scenarios/missing_salt.json",
+			username:      "right_username",
+			password:      "right_password",
 			expectedToken: "",
 			expectedErr:   errors.New("unable to find salt in login parameters"),
 		},
 		{
 			name:          "Missing sha",
 			scenario:      "test_scenarios/missing_sha.json",
+			username:      "right_username",
+			password:      "right_password",
 			expectedToken: "",
 			expectedErr:   errors.New("unable to find sha in login parameters"),
 		},
 		{
 			name:          "Wrong Login",
 			scenario:      "test_scenarios/wrong_login.json",
+			username:      "wrong_username",
+			password:      "wrong_password",
 			expectedToken: "",
 			expectedErr:   errors.New("unable to find TabroomToken within cookies after login"),
 		},
@@ -49,8 +59,8 @@ func Test(t *testing.T) {
 			defer testServer.Close()
 			url, _ := url2.Parse(testServer.URL)
 			api := TabroomApi{
-				username: "",
-				password: "",
+				username: test.username,
+				password: test.password,
 				client:   newDefaultHttpRequester(*url),
 			}
 			token, err := api.retrieveCredentials()

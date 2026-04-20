@@ -17,6 +17,7 @@ type TestServerConfiguration struct {
 			Code    int               `json:"code"`
 			Body    string            `json:"body"`
 			Headers map[string]string `json:"headers"`
+			Form    map[string]string `json:"form"`
 			Cookies []struct {
 				Name  string `json:"name"`
 				Value string `json:"value"`
@@ -35,6 +36,7 @@ type TestHttpResponse struct {
 	code    int
 	body    string
 	headers map[string]string
+	form    map[string]string
 	cookies []TestCookie
 }
 type TestHttpServer struct {
@@ -81,6 +83,7 @@ func (t *TestServerConfiguration) toHttpServer() (*TestHttpServer, error) {
 				code:    response.Code,
 				body:    response.Body,
 				headers: response.Headers,
+				form:    response.Form,
 				cookies: cookies,
 			}
 			httpServer.Responses[key] = append(httpServer.Responses[key], converted)
@@ -89,16 +92,26 @@ func (t *TestServerConfiguration) toHttpServer() (*TestHttpServer, error) {
 	return &httpServer, nil
 }
 
-func (t *TestHttpServer) handle(writer http.ResponseWriter, requests *http.Request) {
-	responses, ok := t.Responses[fmt.Sprintf("%v %v", requests.Method, requests.URL.Path)]
+func (t *TestHttpServer) handle(writer http.ResponseWriter, request *http.Request) {
+	responseKey := fmt.Sprintf("%v %v", request.Method, request.URL.Path)
+	responses, ok := t.Responses[responseKey]
 	if !ok || len(responses) == 0 {
-		writer.WriteHeader(404)
-		return
+		panic(fmt.Sprintf("test response not found for %s", responseKey))
 	}
-
 	response := responses[0]
-	responses = responses[1:]
+	t.Responses[responseKey] = responses[1:]
+	if len(response.form) > 0 {
+		request.ParseForm()
+		if len(response.form) != len(request.Form) {
+			panic(fmt.Sprintf("test response form length is not equal for %s", responseKey))
 
+		}
+		for key, value := range response.form {
+			if request.Form.Get(key) != value {
+				panic(fmt.Sprintf("test response form key is not equal for %s : %s. Want %s, got %s", responseKey, key, value, request.Form.Get(key)))
+			}
+		}
+	}
 	for key, value := range response.headers {
 		writer.Header().Add(key, value)
 	}
