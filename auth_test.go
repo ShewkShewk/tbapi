@@ -61,7 +61,7 @@ func Test(t *testing.T) {
 			api := TabroomApi{
 				username: test.username,
 				password: test.password,
-				client:   newDefaultHttpRequester(*url),
+				client:   newDefaultHttpClient(*url),
 			}
 			token, err := api.retrieveCredentials()
 			if !reflect.DeepEqual(token, test.expectedToken) {

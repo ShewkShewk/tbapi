@@ -42,7 +42,7 @@ func (b *Builder) Build() (error, *TabroomApi) {
 	return nil, &TabroomApi{
 		username: b.Username,
 		password: b.Password,
-		client:   newDefaultHttpRequester(*parsed),
+		client:   newDefaultHttpClient(*parsed),
 	}
 }
 

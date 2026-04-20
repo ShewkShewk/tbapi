@@ -19,7 +19,7 @@ type defaultHttpClient struct {
 	client http.Client
 }
 
-func newDefaultHttpRequester(url url.URL) httpClient {
+func newDefaultHttpClient(url url.URL) httpClient {
 	jar, _ := cookiejar.New(nil)
 	return &defaultHttpClient{
 		url: url,
