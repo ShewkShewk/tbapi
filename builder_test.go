@@ -325,12 +325,12 @@ func TestBuilder_Build(t *testing.T) {
 				username: tt.fields.Username,
 				password: tt.fields.Password,
 			}
-			got, got1 := b.Build()
-			if !reflect.DeepEqual(got, tt.wantErr) {
-				t.Errorf("Build() got = %v, want %v", got, tt.wantErr)
+			got, gotError := b.Build()
+			if !reflect.DeepEqual(got, tt.wantApi) {
+				t.Errorf("Build() gotError = %v, want %v", gotError, tt.wantApi)
 			}
-			if !reflect.DeepEqual(got1, tt.wantApi) {
-				t.Errorf("Build() got1 = %v, want %v", got1, tt.wantApi)
+			if !reflect.DeepEqual(gotError, tt.wantErr) {
+				t.Errorf("Build() got = %v, want %v", got, tt.wantErr)
 			}
 		})
 	}

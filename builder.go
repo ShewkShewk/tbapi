@@ -30,20 +30,20 @@ func (b *Builder) WithPassword(password string) *Builder {
 	return b
 }
 
-func (b *Builder) Build() (error, *TabroomApi) {
+func (b *Builder) Build() (*TabroomApi, error) {
 	err := b.validate()
 	if err != nil {
-		return err, nil
+		return nil, err
 	}
 	parsed, err := url.Parse(b.hostname)
 	if err != nil {
-		return err, nil
+		return nil, err
 	}
-	return nil, &TabroomApi{
+	return &TabroomApi{
 		username: b.username,
 		password: b.password,
 		client:   newDefaultHttpClient(*parsed),
-	}
+	}, nil
 }
 
 func (b *Builder) validate() error {

@@ -49,7 +49,7 @@ func TestEndToEnd(t *testing.T) {
 				t.Fail()
 			}
 			defer testServer.Close()
-			err, tabroomApi := NewBuilder().WithUsername(test.username).WithPassword(test.password).WithHostname(testServer.URL).Build()
+			tabroomApi, err := NewBuilder().WithUsername(test.username).WithPassword(test.password).WithHostname(testServer.URL).Build()
 			if err != nil {
 				t.Errorf("unable to create TabroomApi for scenario %s", test.name)
 			}
