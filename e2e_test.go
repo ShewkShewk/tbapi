@@ -40,6 +40,21 @@ func TestEndToEnd(t *testing.T) {
 			},
 			expectedError: nil,
 		},
+		{
+			name:     "End to End GetTournamentData",
+			scenario: "test_scenarios/end_to_end/get_tournament_data.json",
+			username: "right_username",
+			password: "right_password",
+			toCall:   getTournamentData(27632),
+			expected: &TournamentData{
+				Timezone: "America/Chicago",
+				Start:    "2026-12-31 09:00:00",
+				Name:     "dElo Test Tournament",
+				Webname:  "delo",
+				City:     "Dallas",
+			},
+			expectedError: nil,
+		},
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
@@ -67,5 +82,11 @@ func TestEndToEnd(t *testing.T) {
 func getTournamentsFunc() func(api TabroomApi) (interface{}, error) {
 	return func(api TabroomApi) (interface{}, error) {
 		return api.GetTournaments()
+	}
+}
+
+func getTournamentData(tournamentId int) func(api TabroomApi) (interface{}, error) {
+	return func(api TabroomApi) (interface{}, error) {
+		return api.GetTournamentData(tournamentId)
 	}
 }

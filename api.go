@@ -1,8 +1,10 @@
 package tbapi
 
 import (
+	"encoding/json"
 	"io"
 	"log"
+	"net/url"
 	"regexp"
 	"strconv"
 	"time"
@@ -25,6 +27,30 @@ func (t *TabroomApi) GetTournaments() ([]Tournament, error) {
 	content, _ := io.ReadAll(resp.Body)
 	defer resp.Body.Close()
 	return parseTournaments(string(content))
+}
+
+func (t *TabroomApi) GetTournamentData(tournamentId int) (*TournamentData, error) {
+	if err := t.ensureAuthenticated(); err != nil {
+		return nil, err
+	}
+	params := url.Values{}
+	params.Add("tourn_id", strconv.Itoa(tournamentId))
+
+	resp, err := t.client.post("/api/download_data.mhtml", "application/x-www-form-urlencoded", params.Encode())
+	if err != nil {
+		return nil, err
+	}
+	content, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+	tabroomTournamentData := TournamentData{}
+	err = json.Unmarshal(content, &tabroomTournamentData)
+	if err != nil {
+		return nil, err
+	}
+	return &tabroomTournamentData, nil
 }
 
 func parseTournaments(html string) ([]Tournament, error) {

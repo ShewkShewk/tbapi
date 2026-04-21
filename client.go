@@ -5,11 +5,13 @@ import (
 	"net/http"
 	"net/http/cookiejar"
 	"net/url"
+	"strings"
 	"time"
 )
 
 type httpClient interface {
 	get(path string) (*http.Response, error)
+	post(path string, contentType string, body string) (*http.Response, error)
 	postForm(path string, values url.Values) (*http.Response, error)
 	cookies() map[string]string
 }
@@ -32,6 +34,10 @@ func newDefaultHttpClient(url url.URL) httpClient {
 
 func (h *defaultHttpClient) get(path string) (*http.Response, error) {
 	return h.client.Get(h.url.JoinPath(path).String())
+}
+
+func (h *defaultHttpClient) post(path string, contentType string, body string) (*http.Response, error) {
+	return h.client.Post(h.url.JoinPath(path).String(), contentType, strings.NewReader(body))
 }
 
 func (h *defaultHttpClient) postForm(path string, values url.Values) (*http.Response, error) {
