@@ -26,7 +26,7 @@ func newDefaultHttpClient(url url.URL) httpClient {
 	return &defaultHttpClient{
 		url: url,
 		client: http.Client{
-			Timeout: 15 * time.Second,
+			Timeout: 30 * time.Second,
 			Jar:     jar,
 		},
 	}
